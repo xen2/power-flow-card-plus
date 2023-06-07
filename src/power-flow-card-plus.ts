@@ -631,14 +631,12 @@ export class PowerFlowCardPlus extends LitElement {
     if (individual1.has) {
       const individual1State = this.getEntityStateWatts(entities.individual1?.entity);
       if (individual1State < 0) individual1.invertAnimation = !individual1.invertAnimation;
-      individual1.state = Math.abs(individual1State);
+      individual1.state = individual1State;
     }
     if (individual1.secondary.has) {
       const individual1SecondaryEntity = this.hass.states[entities.individual1?.secondary_info?.entity!];
       const individual1SecondaryState = individual1SecondaryEntity.state;
-      if (typeof individual1SecondaryState === "number") {
-        individual1.secondary.state = Math.max(individual1SecondaryState, 0);
-      } else if (typeof individual1SecondaryState === "string") {
+      if (typeof individual1SecondaryState === "number" || typeof individual1SecondaryState === "string") {
         individual1.secondary.state = individual1SecondaryState;
       }
     }
@@ -662,14 +660,12 @@ export class PowerFlowCardPlus extends LitElement {
     if (individual2.has) {
       const individual2State = this.getEntityStateWatts(entities.individual2?.entity);
       if (individual2State < 0) individual2.invertAnimation = !individual2.invertAnimation;
-      individual2.state = Math.abs(individual2State);
+      individual2.state = individual2State;
     }
     if (individual2.secondary.has) {
       const individual2SecondaryEntity = this.hass.states[entities.individual2?.secondary_info?.entity!];
       const individual2SecondaryState = individual2SecondaryEntity.state;
-      if (typeof individual2SecondaryState === "number") {
-        individual2.secondary.state = Math.max(individual2SecondaryState, 0);
-      } else if (typeof individual2SecondaryState === "string") {
+      if (typeof individual2SecondaryState === "number" || typeof individual2SecondaryState === "string") {
         individual2.secondary.state = individual2SecondaryState;
       }
     }
@@ -1179,11 +1175,11 @@ export class PowerFlowCardPlus extends LitElement {
                           id="individual1-icon"
                           .icon=${individual1.icon}
                           style="${individual1.secondary.has ? "padding-top: 2px;" : "padding-top: 0px;"}
-                          ${entities.individual1?.display_zero_state !== false || (individual1.state || 0) > (individual1.displayZeroTolerance ?? 0)
+                          ${entities.individual1?.display_zero_state !== false || Math.abs(individual1.state || 0) > (individual1.displayZeroTolerance ?? 0)
                             ? "padding-bottom: 2px;"
                             : "padding-bottom: 0px;"}"
                         ></ha-icon>
-                        ${entities.individual1?.display_zero_state !== false || (individual1.state || 0) > (individual1.displayZeroTolerance ?? 0)
+                        ${entities.individual1?.display_zero_state !== false || Math.abs(individual1.state || 0) > (individual1.displayZeroTolerance ?? 0)
                           ? html` <span class="individual1"
                               >${individual1.showDirection
                                 ? html`<ha-icon class="small" .icon=${individual1.invertAnimation ? "mdi:arrow-down" : "mdi:arrow-up"}></ha-icon>`
